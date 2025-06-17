@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Updated Light Theme with #FBE4FF Background and Darker Buttons */
+
+@layer base {
+  :root {
+    /* Light Theme - Soft Background, Richer Elements */
+    --background: 300 100% 95%; /* #FBE4FF */
+    --foreground: 252 15% 15%;  /* dark violet */
+
+    --card: 0 0% 100%;
+    --card-foreground: 252 15% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 252 15% 20%;
+
+    --primary: 275 70% 38%; /* darker lavender */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 185 50% 85%; /* mint */
+    --secondary-foreground: 252 15% 20%;
+
+    --muted: 185 40% 85%;
+    --muted-foreground: 252 12% 35%;
+
+    --accent: 275 70% 45%; /* deeper lavender accent */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 30% 80%;
+    --input: 220 30% 80%;
+    --ring: 275 70% 55%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 300 100% 94%;
+    --sidebar-foreground: 252 15% 20%;
+    --sidebar-primary: 275 70% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 185 50% 85%;
+    --sidebar-accent-foreground: 252 15% 20%;
+    --sidebar-border: 220 30% 80%;
+    --sidebar-ring: 275 70% 55%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 275 70% 40%; /* ⬅ SAME as accent now */
+    --primary-foreground: 240 10% 10%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 275 70% 40%; /* ⬅ SAME as primary now */
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 275 70% 70%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 275 85% 75%;
+    --sidebar-primary-foreground: 240 10% 10%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 275 70% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent;
+  }
+
+  .glass-effect {
+    @apply bg-background/80 backdrop-blur-sm border border-border/50;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
