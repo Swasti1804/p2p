@@ -1,7 +1,28 @@
 import asyncHandler from 'express-async-handler';
-import Prompt from '../models/Prompt.js';
+import Prompt from '../models/prompt.js';
 import { generateFiles } from '../utils/extensionGenerator.js';
 import { bundleZip } from '../utils/zipBundler.js';
+
+// @desc    Generate extension from prompt
+// @route   POST /api/extensions/generate
+// @access  Private
+export const generateExtension = asyncHandler(async (req, res) => {
+  const { prompt } = req.body;
+
+  if (!prompt) {
+    res.status(400);
+    throw new Error('Prompt is required');
+  }
+
+  const newPrompt = await Prompt.create({
+    user: req.user._id,
+    promptText: prompt,
+    generatedCode: '// your AI-generated code here', // Replace this line with real AI logic
+    status: 'completed',
+  });
+
+  res.status(201).json({ message: 'Extension generated successfully', promptId: newPrompt._id });
+});
 
 // @desc    Download generated extension as .zip
 // @route   GET /api/extensions/:promptId/download

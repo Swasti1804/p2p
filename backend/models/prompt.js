@@ -10,19 +10,20 @@ const promptSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  generatedCode: {
+  responseText: {
     type: String,
+    required: true,
   },
   status: {
     type: String,
     enum: ['pending', 'completed', 'failed'],
-    default: 'pending',
+    default: 'completed',
   },
 }, {
   timestamps: true,
 });
 
-// ✅ Fix: Use existing model if already compiled
+// Reuse model if already compiled
 const Prompt = mongoose.models.Prompt || mongoose.model('Prompt', promptSchema);
 
 export default Prompt;

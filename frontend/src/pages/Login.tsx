@@ -11,6 +11,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
+import axios from "axios";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,26 +24,41 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login API call
-    setTimeout(() => {
-      setIsLoading(false);
-      login();
+    try {
+      const response = await axios.post("/api/auth/login", {
+        email,
+        password,
+      });
+
+      const data = response.data;
+
+      login(data.token); // Save token in context/localStorage
+
       toast({
         title: "Welcome back!",
         description: "You have successfully logged in.",
       });
-      
-      // Check if there's a redirect URL stored
-      const redirectUrl = localStorage.getItem('redirectAfterAuth');
+
+      const redirectUrl = localStorage.getItem("redirectAfterAuth");
       if (redirectUrl) {
-        localStorage.removeItem('redirectAfterAuth');
+        localStorage.removeItem("redirectAfterAuth");
         navigate(redirectUrl);
       } else {
         navigate("/");
       }
-    }, 1000);
+    } catch (error: any) {
+      toast({
+        title: "Login Failed",
+        description:
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <motion.div

@@ -43,20 +43,46 @@ export function ExtensionGenerator() {
     console.log("Generating extension for prompt:", prompt);
 
     try {
-      const response = await fetch("/api/extension/generate", {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found. Please login again.");
+      }
+
+      const response = await fetch("http://localhost:5000/api/extensions/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ prompt }),
       });
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error("❌ Server error:", errorText);
         throw new Error("Failed to generate extension");
       }
 
-      const mockDownloadUrl = "data:application/zip;base64,UEsDBAoAAAAAAA==";
-      setDownloadUrl(mockDownloadUrl);
+      const { promptId } = await response.json();
+
+      // 🔽 Now get the ZIP file
+      const downloadResponse = await fetch(`http://localhost:5000/api/extensions/${promptId}/download`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!downloadResponse.ok) {
+        const errorText = await downloadResponse.text();
+        console.error("❌ Download error:", errorText);
+        throw new Error("Failed to download extension");
+      }
+
+      const blob = await downloadResponse.blob();
+      const url = URL.createObjectURL(blob);
+      setDownloadUrl(url);
 
       toast({
         title: "Success!",
@@ -136,7 +162,7 @@ export function ExtensionGenerator() {
                   onClick={handleGenerate}
                   disabled={isGenerating}
                   className="w-full py-7 px-8 text-2xl font-bold rounded-xl transition-all duration-300 bg-primary text-white hover:bg-primary/90"
-              >
+                >
                   {isGenerating ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />

@@ -1,9 +1,8 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -13,21 +12,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if user was previously logged in
-    const authStatus = localStorage.getItem('isLoggedIn');
-    if (authStatus === 'true') {
+    // Check token on load
+    const token = localStorage.getItem('authToken');
+    if (token) {
       setIsLoggedIn(true);
     }
   }, []);
 
-  const login = () => {
+  const login = (token: string) => {
+    localStorage.setItem('authToken', token);
     setIsLoggedIn(true);
-    localStorage.setItem('isLoggedIn', 'true');
   };
 
   const logout = () => {
+    localStorage.removeItem('authToken');
     setIsLoggedIn(false);
-    localStorage.removeItem('isLoggedIn');
   };
 
   return (
